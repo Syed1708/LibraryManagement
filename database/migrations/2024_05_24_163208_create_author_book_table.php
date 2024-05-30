@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\Author;
 use App\Models\Book;
-use App\Models\Category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('book_category', function (Blueprint $table) {
+        Schema::create('author_book', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Author::class);
             $table->foreignIdFor(Book::class);
-            $table->foreignIdFor(Category::class);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('book_category');
+        Schema::dropIfExists('author_book');
     }
 };

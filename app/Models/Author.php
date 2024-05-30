@@ -15,4 +15,10 @@ class Author extends Model
         'image',
         'description',
     ];
+
+    public function books()
+    {
+
+        return $this->belongsToMany(Book::class,'author_book')->withTimestamps();
+    }
 }

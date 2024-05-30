@@ -19,7 +19,6 @@ return new class extends Migration
             $table->uuid('isbn');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignIdFor(Author::class);
             $table->foreignIdFor(Category::class);
             $table->foreignIdFor(Genre::class);
             $table->string('image');

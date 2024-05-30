@@ -4,20 +4,20 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Category;
+use App\Models\Genre;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\CategoryResource\Pages;
+use App\Filament\Resources\GenreResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Filament\Resources\GenreResource\RelationManagers;
 
-class CategoryResource extends Resource
+class GenreResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Genre::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -41,16 +41,9 @@ class CategoryResource extends Resource
                 ,
                 TextInput::make('slug')
                 ->required()
-                ->unique(ignoreRecord:true)
-                ,
+                ->unique(ignoreRecord:true),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('text_color')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('bg_color')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('hover_color')
-                    ->maxLength(255),
             ]);
     }
 
@@ -61,8 +54,6 @@ class CategoryResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('description')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -96,9 +87,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListGenres::route('/'),
+            'create' => Pages\CreateGenre::route('/create'),
+            'edit' => Pages\EditGenre::route('/{record}/edit'),
         ];
     }
 }

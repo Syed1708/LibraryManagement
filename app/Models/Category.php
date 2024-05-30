@@ -13,12 +13,15 @@ class Category extends Model
     protected $fillable = [
         'title',
         'slug',
+        'description',
         'text_color',
         'bg_color',
         'hover_color',
     ];
 
     public function books(){
-        return $this->belongsToMany(Book::class);
+        return $this->hasMany(Book::class);
     }
+
+    
 }

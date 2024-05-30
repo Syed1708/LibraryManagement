@@ -4,20 +4,20 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Category;
+use App\Models\Author;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\CategoryResource\Pages;
+use App\Filament\Resources\AuthorResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Filament\Resources\AuthorResource\RelationManagers;
 
-class CategoryResource extends Resource
+class AuthorResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Author::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -25,7 +25,7 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')
+                Forms\Components\TextInput::make('name')
                 ->live()
                 ->required()
                 ->afterStateUpdated(function(string $operation, $state, Forms\Set $set ){
@@ -41,16 +41,15 @@ class CategoryResource extends Resource
                 ,
                 TextInput::make('slug')
                 ->required()
-                ->unique(ignoreRecord:true)
-                ,
+                ->unique(ignoreRecord:true),
+                
+                Forms\Components\FileUpload::make('image')
+                    ->image()
+                    ->disk('public')
+                    ->directory('authors/thumb')
+                    ->required(),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('text_color')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('bg_color')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('hover_color')
-                    ->maxLength(255),
             ]);
     }
 
@@ -58,12 +57,11 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -96,9 +94,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListAuthors::route('/'),
+            'create' => Pages\CreateAuthor::route('/create'),
+            'edit' => Pages\EditAuthor::route('/{record}/edit'),
         ];
     }
 }
