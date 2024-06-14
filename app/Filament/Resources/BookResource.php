@@ -75,12 +75,18 @@ class BookResource extends Resource
                     Section::make('Meta')->schema([
                         Forms\Components\DatePicker::make('published_year')
                             ->required(),
-                        Forms\Components\TextInput::make('copices')
+                        Forms\Components\TextInput::make('fees')
                             ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('avilable_copices')
+                            ->minLength(1)
+                            ->numeric(),
+                        Forms\Components\TextInput::make('copies')
                             ->required()
-                            ->maxLength(255),
+                            ->minLength(1)
+                            ->numeric(),
+                        Forms\Components\TextInput::make('available_copies')
+                            ->required()
+                            ->minLength(1)
+                            ->numeric(),
                     ]),
 
 
@@ -111,9 +117,9 @@ class BookResource extends Resource
                 Tables\Columns\TextColumn::make('published_year')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('copices')
+                Tables\Columns\TextColumn::make('copies')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('avilable_copices')
+                Tables\Columns\TextColumn::make('available_copies')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

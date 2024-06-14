@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\BorrowController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/{record}/pdf', [BorrowController::class, 'downloadPdf'])->name('student.pdf.download');
 
 Route::middleware([
     'auth:sanctum',

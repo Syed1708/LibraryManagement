@@ -18,8 +18,9 @@ class Book extends Model
         'genre_id',
         'image',
         'published_year',
-        'copices',
-        'avilable_copices',
+        'fees',
+        'copies',
+        'available_copies',
     ];
  
     public static function boot()
@@ -47,5 +48,18 @@ class Book extends Model
         return $this->belongsTo(Genre::class);
     }
 
+    // public function borrows()
+    // {
+    //     return $this->hasMany(Borrow::class);
+    // }
+    // public function borrow()
+    // {
+    //     return $this->belongsTo(Borrow::class);
+    // }
+
+    public function borrowItems()
+    {
+        return $this->hasMany(BorrowItem::class);
+    }
 
 }

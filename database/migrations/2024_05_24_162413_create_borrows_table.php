@@ -17,13 +17,14 @@ return new class extends Migration
         Schema::create('borrows', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Book::class);
-            $table->string('fees');
-            $table->string('late_fee');
-            $table->date('borrow_date');
-            $table->date('due_date');
-            $table->date('return_date');
-            $table->integer('qty')->default(1);
+            $table->foreignId('student_id')->constrained('users');
+            $table->string('borrow_no');
+            $table->date('borrow_date'); //when borrow a book
+            $table->date('due_date'); //deadline to return a book
+            $table->date('return_date')->nullable(); //when user actually return a book
+            $table->string('fees',50);
+            $table->string('late_fee',50);
+            $table->string('payable',50);
             $table->timestamps();
         });
     }

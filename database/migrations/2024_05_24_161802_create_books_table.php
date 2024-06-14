@@ -23,8 +23,9 @@ return new class extends Migration
             $table->foreignIdFor(Genre::class);
             $table->string('image');
             $table->date('published_year');
-            $table->string('copices');
-            $table->string('avilable_copices');
+            $table->string('fees');
+            $table->integer('copies');
+            $table->integer('available_copies');
             $table->timestamps();
         });
     }
