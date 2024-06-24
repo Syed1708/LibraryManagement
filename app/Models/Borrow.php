@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +25,7 @@ class Borrow extends Model
         'payable',
     ];
 
-    
+
     public function items()
     {
         return $this->hasMany(BorrowItem::class);
@@ -37,12 +38,18 @@ class Borrow extends Model
         parent::boot();
 
         static::deleting(function ($borrow) {
-            foreach ($borrow->items as $item) {
-                $book = Book::find($item->book_id);
-                if ($book) {
-                    $book->increment('available_copies', $item->qty);
-                }
+            // dd($borrow->return_date);
+            // if return date is not null then increment otherwise not 
+            if($borrow->return_date == null){
+                foreach ($borrow->items as $item) {
+                    $book = Book::find($item->book_id);
+                    
+                    if ($book) {
+                        $book->increment('available_copies', $item->qty);
+                    }
+                }              
             }
+            
         });
 
         static::deleted(function ($borrow) {
@@ -67,8 +74,8 @@ class Borrow extends Model
     //     $this->payable = $totalFees + $totalLateFees;
     // }
 
-    
-    
+
+
     public function librarian()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -79,27 +86,75 @@ class Borrow extends Model
         return $this->belongsTo(User::class, 'student_id');
     }
 
-    public function calculateLateFee($returnDate)
-    {
-        if ($returnDate > $this->due_date) {
-            $daysLate = $returnDate->diffInDays($this->due_date);
-            return $this->late_fee * $daysLate;
-        }
-        return 0;
-    }
+    // public function calculateLateFee($returnDate)
+    // {
+    //     if ($returnDate > $this->due_date) {
+    //         $daysLate = $returnDate->diffInDays($this->due_date);
+    //         dd($daysLate);
+    //         return $this->late_fee * $daysLate;
+    //     }
+    //     return 0;
+    // }
 
-    public function returnBooks($returnDate)
+    // public function returnBooks($returnDate)
+    // {
+    //     foreach ($this->items as $item) {
+    //         $book = Book::find($item->book_id);
+    //         $book->increment('available_copies', $item->qty);
+    //     }
+
+    //     $this->return_date = $returnDate;
+    //     $this->late_fee = $this->calculateLateFee($returnDate);
+    //     $this->payable = $this->fees + $this->late_fee;
+    //     $this->save();
+    // }
+
+
+
+    public function calculateLateFee(Carbon $returnDate)
+    {
+        // Ensure due_date is a Carbon instance
+        $dueDate = Carbon::parse($this->due_date);
+        // $dueDate = $this->due_date;
+    
+        // Debugging: Print out the dates
+        // dd([
+        //     'due_date_raw' => $this->due_date,
+        //     'due_date' => $dueDate->toDateString(),
+        //     'return_date' => $returnDate->toDateString(),
+        // ]);
+    // Calculate the difference in days explicitly ensuring it is positive
+    if ($returnDate->greaterThan($dueDate)) {
+        $daysLate = floor($dueDate->diffInDays($returnDate));
+        // dd($this->late_fee * $daysLate);
+        return $this->late_fee * $daysLate;
+    } 
+
+    // Debugging: Print out the days late
+    
+ 
+     // Debugging: Print out the days late
+    //  dd($daysLate);
+    
+        
+    return 0;
+
+    }
+    
+    public function returnBooks(Carbon $returnDate)
     {
         foreach ($this->items as $item) {
             $book = Book::find($item->book_id);
             $book->increment('available_copies', $item->qty);
         }
-
+    
         $this->return_date = $returnDate;
-        $this->late_fee = $this->calculateLateFee($returnDate);
-        $this->payable = $this->fees + $this->late_fee;
+        $lateFee = $this->calculateLateFee($returnDate);
+        $this->late_fee = $lateFee;
+        $this->payable = $this->fees + $lateFee;
+        // dd($this->payable);
         $this->save();
     }
-
+    
 
 }

@@ -144,7 +144,7 @@ class BorrowResource extends Resource
                                 ->addActionLabel('Add More')
                                 ->afterStateUpdated(function ($state, $set) {
                                     $totalFees = 0;
-                                    $totalLateFees = 0;
+                                    $totalLateFees = 0; //on create alltime late fee will be 0 then return a book then calculate actual late
 
                                     foreach ($state as $item) {
                                         $totalFees += $item['fees'] * $item['qty'];

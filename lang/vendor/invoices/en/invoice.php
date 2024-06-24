@@ -32,7 +32,7 @@ return [
     'amount_in_words'        => 'Amount in words',
     'amount_in_words_format' => '%s %s and %s %s',
     'notes'                  => 'Notes',
-    'shipping'               => 'Shipping',
+    'shipping'               => 'Late Fees',
     'paid'                   => 'Paid',
     'due'                    => 'Due',
     'page'                   => 'Page',
